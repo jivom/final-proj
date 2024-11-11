@@ -95,7 +95,7 @@ def normalizeData_face(img, face_model, landmarks, hr, ht, cam):
     return img_warped, landmarks_warped
 
 if __name__ == '__main__':
-    img_file_name = './example/input/cam01.JPG'
+    img_file_name = './example/input/cam01.jpg'
     print('load input face image: ', img_file_name)
     image = cv2.imread(img_file_name)
 
