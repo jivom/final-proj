@@ -31,7 +31,7 @@ def show_box(box):
     ax.add_patch(plt.Rectangle((x0, y0), w, h, edgecolor='green', facecolor=(0,0,0,0), lw=2))  
     plt.show()
     
-def show_anns(anns):
+def show_anns(anns, save_imag = False, img_name = 'output.png'):
     plt.figure(figsize=(10,10))
     plt.imshow(background)
     if len(anns) == 0:
@@ -47,7 +47,11 @@ def show_anns(anns):
         color_mask = np.concatenate([np.random.random(3), [0.35]])
         img[m] = color_mask
     ax.imshow(img)  
-    plt.show()  
+    if save_imag:
+        plt.savefig("./output/" + img_name)
+    else:
+        
+        plt.show()  
     
     
 def hightlight_object(ann):
