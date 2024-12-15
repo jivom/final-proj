@@ -94,6 +94,11 @@ def normalizeData_face(img, face_model, landmarks, hr, ht, cam):
 
     return img_warped, landmarks_warped
 
+def find_largest_face(detected_faces):
+    areas = np.array([face.area() for face in detected_faces])
+    largest_face = np.argmax(areas)
+    return detected_faces[largest_face]
+
 if __name__ == '__main__':
     img_file_name = './example/input/cam01.jpg'
     print('load input face image: ', img_file_name)
@@ -107,7 +112,8 @@ if __name__ == '__main__':
         print('warning: no detected face')
         exit(0)
     print('detected one face')
-    shape = predictor(image, detected_faces[0]) ## only use the first detected face (assume that each input image only contains one face)
+    best_face = find_largest_face(detected_faces)
+    shape = predictor(image, best_face) ## only use the first detected face (assume that each input image only contains one face)
     shape = face_utils.shape_to_np(shape)
     landmarks = []
     for (x, y) in shape:
