@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import torch
 
 model = None
 time_shown = False
@@ -27,6 +28,7 @@ def load_model(type, model_path):
     else:
         print("Reloading model")
     sam = sam_model_registry[type](checkpoint=model_path)
+    sam.to(device="cuda")
     mask_generator = SamAutomaticMaskGenerator(sam)
     time_end = time.time()  
     print("Model loaded")
