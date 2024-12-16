@@ -61,3 +61,39 @@ def hightlight_object(ann):
     img_copy[mask] = img_copy[mask] * 0.5 + np.array([255, 0, 0]) * 0.5
     plt.imshow(img_copy)
     plt.show()
+
+def get_mask_line(arrow_start, arrow_end, draw_on_image = False):
+    x1, y1 = arrow_start
+    x2, y2 = arrow_end 
+    m = (y2 - y1) / (x2 - x1) 
+    c = (y1 - m * x1 )* 0.1 #this is the rescale factor
+
+    m_inv = 1 / m
+    b_inv = - c / m
+
+    mask_line = np.zeros((background.shape[0], background.shape[1]), dtype=bool)
+
+    if y1 < y2:
+        for y in range(int(y1/10),background.shape[0]):
+            x = int(m_inv * y + b_inv)
+            if x >= 0 and x < background.shape[1]:
+                mask_line[y, x] = True
+    else:
+        for y in range(0, int(y1/10)):
+            x = int(m_inv * y + b_inv)
+            if x >= 0 and x < background.shape[1]:
+                mask_line[y, x] = True
+
+    if x1 < x2:
+        for x in range(int(x1/10),background.shape[1]):
+            y = int(m * x + c)
+            if y >= 0 and y < background.shape[0]:
+                mask_line[y, x] = True
+    else:
+        for x in range(0, int(x1/10)):
+            y = int(m * x + c)
+            if y >= 0 and y < background.shape[0]:
+                mask_line[y, x] = True
+    if draw_on_image:
+        background[mask_line] = [255, 0, 0]
+    return mask_line
