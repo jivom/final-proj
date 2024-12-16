@@ -123,12 +123,17 @@ def load_model():
     print('load gaze estimator')
     model = gaze_network()
 
+    if torch.cuda.is_available():
+        model.cuda()
+
     pre_trained_model_path = 'ckpt/epoch_24_ckpt.pth.tar'
     if not os.path.isfile(pre_trained_model_path):
         print('the pre-trained gaze estimation model does not exist.')
     else:
         print('load the pre-trained model: ', pre_trained_model_path)
-    ckpt = torch.load(pre_trained_model_path, map_location=torch.device('cpu'))
+    
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    ckpt = torch.load(pre_trained_model_path, map_location=device)
     model.load_state_dict(ckpt['model_state'], strict=True)  # load the pre-trained model
     model.eval()  # change it to the evaluation mode
     
@@ -148,8 +153,6 @@ def load_model():
     
     
 def find_vector_arrow(image):
-
-
     detected_faces = face_detector(image, 1) ## convert BGR image to RGB for dlib
     if len(detected_faces) == 0:
         print('warning: no detected face')
@@ -173,13 +176,13 @@ def find_vector_arrow(image):
 
     img_normalized, ____ = normalizeData_face(image, face_model, landmarks_sub, hr, ht, camera_matrix)
 
-    if torch.cuda.is_available():
-        model.cuda()
-
     input_var = img_normalized
     input_var = trans(input_var)
     input_var = torch.autograd.Variable(input_var.float())
     input_var = input_var.view(1, input_var.size(0), input_var.size(1), input_var.size(2))  # the input must be 4-dimension
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    input_var = input_var.to(device)
     pred_gaze = model(input_var)  # get the output gaze direction, this is 2D output as pitch and raw rotation
     pred_gaze = pred_gaze[0] # here we assume there is only one face inside the image, then the first one is the prediction
     pred_gaze_np = pred_gaze.cpu().data.numpy()  # convert the pytorch tensor to numpy array
