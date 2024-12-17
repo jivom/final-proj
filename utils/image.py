@@ -50,7 +50,6 @@ def show_anns(anns, save_imag = False, img_name = 'output.png'):
     if save_imag:
         plt.savefig("./output/" + img_name)
     else:
-        
         plt.show()  
     
     
@@ -97,3 +96,63 @@ def get_mask_line(arrow_start, arrow_end, draw_on_image = False):
     if draw_on_image:
         background[mask_line] = [255, 0, 0]
     return mask_line
+
+def get_mask_line_yolo(arrow_start, arrow_end, table_img, draw_on_image = False):
+    x1, y1 = arrow_start
+    x2, y2 = arrow_end 
+    m = (y2 - y1) / (x2 - x1) 
+    c = (y1 - m * x1 )* 0.1 * ((table_img.shape[0] / background.shape[0]) * (table_img.shape[1] / background.shape[1])) #this is the rescale factor
+
+    m_inv = 1 / m
+    b_inv = - c / m
+
+    mask_line = np.zeros((table_img.shape[0], table_img.shape[1]), dtype=bool)
+
+    if y1 < y2:
+        for y in range(int(y1/10),table_img.shape[0]):
+            x = int(m_inv * y + b_inv)
+            if x >= 0 and x < table_img.shape[1]:
+                mask_line[y, x] = True
+    else:
+        for y in range(0, int(y1/10)):
+            x = int(m_inv * y + b_inv)
+            if x >= 0 and x < table_img.shape[1]:
+                mask_line[y, x] = True
+
+    if x1 < x2:
+        for x in range(int(x1/10),table_img.shape[1]):
+            y = int(m * x + c)
+            if y >= 0 and y < table_img.shape[0]:
+                mask_line[y, x] = True
+    else:
+        for x in range(0, int(x1/10)):
+            y = int(m * x + c)
+            if y >= 0 and y < table_img.shape[0]:
+                mask_line[y, x] = True
+    if draw_on_image:
+        table_img[mask_line] = [255, 0, 0]
+    return mask_line
+
+def show_anns_yolo(anns, table_bbox, save_imag = False, img_name = 'output.png'):
+    plt.figure(figsize=(10,10))
+    plt.imshow(background)
+    if len(anns) == 0:
+        return
+    sorted_anns = sorted(anns, key=(lambda x: x['area']), reverse=True)
+    ax = plt.gca()
+    ax.set_autoscale_on(False)
+
+    img = np.ones((sorted_anns[0]['segmentation'].shape[0], sorted_anns[0]['segmentation'].shape[1], 4))
+    img[:,:,3] = 0
+    for ann in sorted_anns:
+        m = ann['segmentation']
+        color_mask = np.concatenate([np.random.random(3), [0.35]])
+        img[m] = color_mask
+
+    tx1, ty1, tx2, ty2 = [int(v) for v in table_bbox]
+
+    ax.imshow(img, extent=[tx1, tx2, ty1, ty2], origin='lower') 
+    if save_imag:
+        plt.savefig("./output/" + img_name)
+    else:
+        plt.show()

@@ -112,7 +112,6 @@ def find_largest_face(detected_faces):
     largest_face = np.argmax(areas)
     return detected_faces[largest_face]
 
-    return rvec, tvec
 def load_model():
     global model
     global predictor

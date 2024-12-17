@@ -32,3 +32,11 @@ def find_object_on_table(masks):
         if is_box_within(ann['bbox'], bounding_box) and np.any(ann['bbox'] != bounding_box):
             masks_on_table.append(ann)
     return (masks_on_table)
+
+def find_object_given_table(table_bbox, masks):
+    bounding_box = table_bbox
+    masks_on_table = []
+    for ann in masks:
+        if is_box_within(ann['bbox'], bounding_box) and np.any(ann['bbox'] != bounding_box):
+            masks_on_table.append(ann)
+    return (masks_on_table)
