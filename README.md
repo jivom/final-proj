@@ -7,3 +7,4 @@ Requirements to run
 2. pip3 install torch torchvision torchaudio
 3. Download model checkpoint, rename to 'segment_anything_default', and place in this folder - https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
 4. **Download for vit_b** here: https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
+5. **Download for yolo** here: https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8s.pt (To run with yolo, use main_yolo.ipynb notebook)
