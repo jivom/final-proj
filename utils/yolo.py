@@ -20,7 +20,7 @@ def get_table(img, conf=0.25, cuda=True):
     if cuda:
         torch.cuda.set_device(0)
 
-    model = YOLO(f'./yolov8s.pt')
+    model = YOLO('ckpt/yolov8s.pt')
 
     # run the model on the image
     results = model.predict(source=img, conf=conf)
