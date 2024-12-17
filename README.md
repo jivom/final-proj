@@ -3,8 +3,9 @@ CS 543 Final Project: Focused object detection for tetraplegic people using Mask
 
 
 Requirements to run
-1. pip install git+https://github.com/facebookresearch/segment-anything.git
-2. pip3 install torch torchvision torchaudio
-3. Download model checkpoint, rename to 'segment_anything_default', and place in this folder - https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
-4. **Download for vit_b** here: https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
-5. **Download for yolo** here: https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8s.pt (To run with yolo, use main_yolo.ipynb notebook)
+1. pip install git+https://github.com/facebookresearch/segment-anything.git. If you want to use SAM2, use: pip install git+https://github.com/facebookresearch/sam2.git. SAM2 requires a different environment than SAM (python 3.10+).
+2. pip install -r requirements.txt
+3. **Download for vit_b** here: https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
+4. **Download for yolo** here: https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8s.pt (To run with yolo, use main_yolo.ipynb notebook)
+5. **Download for SAM2** here: https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_tiny.pt
+6. Save downloads under ckpt folder to run. Make sure they match with the file nams in the ipynb notebook desired.
