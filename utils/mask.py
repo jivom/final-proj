@@ -21,10 +21,12 @@ def is_box_within(inner_box, outer_box):
     )
 
 
-def find_object_on_table(masks):
+def find_object_on_table(masks, table_idx=0):
     
     # assume table is the largest mask
-    table_ann = max(masks, key=(lambda x: x['area']))
+    sorted_masks = sorted(masks, key=(lambda x: x['area']), reverse=True)
+    # table_ann = max(masks, key=(lambda x: x['area']))
+    table_ann = sorted_masks[table_idx]
 
     bounding_box = table_ann['bbox']
     masks_on_table = []
@@ -34,9 +36,22 @@ def find_object_on_table(masks):
     return (masks_on_table)
 
 def find_object_given_table(table_bbox, masks):
-    bounding_box = table_bbox
     masks_on_table = []
-    for ann in masks:
-        if is_box_within(ann['bbox'], bounding_box) and np.any(ann['bbox'] != bounding_box):
-            masks_on_table.append(ann)
+
+    for mask in masks:
+        y_coords, x_coords = np.where(mask["segmentation"])
+        x = np.mean(x_coords)
+        y = np.mean(y_coords)
+
+        if table_bbox[0] <= x <= table_bbox[0] + table_bbox[2] and table_bbox[1] <= y <= table_bbox[1] + table_bbox[3]:
+            masks_on_table.append(mask)
+        
+
+
+
+        # bounding_box = table_bbox
+        # masks_on_table = []
+        # for ann in masks:
+        #     if is_box_within(ann['bbox'], bounding_box) and np.any(ann['bbox'] != bounding_box):
+        #         masks_on_table.append(ann)
     return (masks_on_table)
