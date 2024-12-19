@@ -1,10 +1,10 @@
 from segment_anything import SamAutomaticMaskGenerator, sam_model_registry
-from sam2.build_sam import build_sam2
-from sam2.automatic_mask_generator import SAM2AutomaticMaskGenerator
-import hydra
+# from sam2.build_sam import build_sam2
+# from sam2.automatic_mask_generator import SAM2AutomaticMaskGenerator
+# import hydra
 
-hydra.core.global_hydra.GlobalHydra.instance().clear()
-hydra.initialize_config_module('sam2_configs', version_base='1.2')
+# hydra.core.global_hydra.GlobalHydra.instance().clear()
+# hydra.initialize_config_module('sam2_configs', version_base='1.2')
 
 import cv2
 import numpy as np
